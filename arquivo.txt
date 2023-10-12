@@ -1,0 +1,15 @@
+/*
+  Este programa tem como objetivo testar
+  o analisador léxico
+  Erros léxicos propositais foram deixados para testar as validações
+*/
+program test_procedure;
+begin
+procedure imprime_mensagem(mensagem)
+begin
+  print(mensagem);
+end
+
+imprime_mensagem("Hello World!")
+
+end.
