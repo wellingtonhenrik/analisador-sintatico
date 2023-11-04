@@ -12,6 +12,7 @@ def processar_arquivo():
     if caminho:
         tokens = le_arquivo(caminho)
         resultado.config(text=f"{tokens}")
+        print(tokens)
     else:
         resultado.config(text="Nenhum arquivo selecionado")
 

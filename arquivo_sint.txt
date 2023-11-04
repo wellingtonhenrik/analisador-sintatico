@@ -1,0 +1,5 @@
+program test_procedure;
+var sTrin: integer;
+begin
+//
+end.

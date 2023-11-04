@@ -170,7 +170,7 @@ def processar_arquivo(arquivo):
 
     #exibir_tokens_e_lexemas(tokens, lexemas, linha_atual) # Apenas para entendimento, não é necessário para o funcionamento
     tokens = np.array(tokens)
-    #return tokens
+    return tokens
 
 def adicionar_token_e_lexema(tokens, lexemas, token, lexema, linha, linha_atual):
     tokens.append(token)
@@ -181,68 +181,3 @@ def exibir_tokens_e_lexemas(tokens, lexemas, linha_atual):
     for token, lexema, linha in zip(tokens, lexemas, linha_atual):
         print(f'Token: {token} - Lexema: {lexema} - Linha: {linha}')
     print(tokens) # [array de tokens] Apenas para entendimento, não é necessário para o funcionamento
-        
-print(tokens) 
-tokens = np.array(tokens)
-
-producoes = [[2,7,4]] #p1
-producoes = np.append(producoes, [[2,8,0]], axis = 0); #P2
-producoes = np.append(producoes, [[8,0,0]], axis = 0); #P3
-producoes = np.append(producoes, [[3,2,8]], axis = 0); #P4 
-producoes = np.append(producoes, [[1,0,0]], axis = 0); #P5
-
-#inicializar a Matriz de Parsing com zeros.
-tabParsing = np.zeros((9, 6))
-  			
-tabParsing[6][2] = 1;
-tabParsing[7][2] = 2;
-tabParsing[7][3] = 3;
-tabParsing[7][4] = 3;
-tabParsing[8][3] = 4;
-tabParsing[8][4] = 5;
-
-pilha = [5] #$ topo da pilha
-
-pilha = np.hstack([producoes[0][:], pilha]) # Verificar o que isso realmente faz, com exemplos
-
-print(pilha)
-
-X = pilha[0]
-a = tokens[0]
-
-while X != 5: #enquanto pilha nao estiver vazia (trocar pelo numero do $ da gramatica)
-    print(X)
-    print(a)
-    print(pilha)
-    if X == 1: #se o topo da pilha for vazio (verificar numero do vazio da gramatica p mudar)
-        pilha = np.delete(pilha,[0])
-        X = pilha[0]
-    else:
-        if X <= 5: #topo da pilha eh um terminal ($?)
-            if X == a: #deu match :D
-                pilha = np.delete(pilha,[0])
-                tokens = np.delete(tokens,[0])
-                X = pilha[0]
-                if tokens.size != 0:
-                    a = tokens[0]
-            else:
-                print('Error')
-                break
-        else:
-            topo = np.hstack([producoes[int(tabParsing[X][a])-1][:], pilha]) #empilha as producoes correspondentes
-            if topo[0] == 1: # se topo vazio X recebe o novo topo da pilha (verificar numero do vazio da gramatica p mudar)
-                X = topo[0] #
-            else:
-                if topo[0] != 0: # se topo nao vazio atualiza a pilha
-                    pilha = np.delete(pilha,[0])
-                    pilha = np.hstack([producoes[int(tabParsing[X][a])-1][:], pilha])
-                    pilha = pilha[pilha != 0]
-                    X = pilha[0]
-                else:
-                    print('Error')
-                    break
-print('Pilha: ')                
-print(pilha)
-print('Entrada: ')
-print(tokens)
-print('Sentença: ' + palavra +' reconhecida com sucesso')
