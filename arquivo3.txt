@@ -3,11 +3,9 @@
   o analisador léxico
   Erros léxicos propositais foram deixados para testar as validações
 */
-program teste3;
+program teste;
+var y: integer;
+x: string;
 begin
-  if (y <= 20) then begin
-    print("y é menor ou igual a 20");
-  else if (y >= 30) then begin
-    print("y é maior ou igual a 30");
-  end;
+  print{"y é maior ou igual a 30"};
 end.

@@ -4,8 +4,6 @@ from parsing import TabParsing
 # Tokens virão do analisador léxico
 tokens = [8, 16, 31, 2, 16, 33, 14, 31, 22, 18, 35]
 
- # vem do lexico
-
 print(tokens) 
 tokens = np.array(tokens)
 
@@ -38,7 +36,7 @@ while X != 43: #enquanto pilha nao estiver vazia
         pilha = np.delete(pilha,[0])
         X = pilha[0]
     else:
-        if X <= 44: #topo da pilha eh um terminal
+        if X <= 44: #topo da pilha é um terminal
             if X == a: #deu match
                 pilha = np.delete(pilha,[0])
                 tokens = np.delete(tokens,[0])

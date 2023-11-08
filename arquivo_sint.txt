@@ -1,5 +1,8 @@
-program test_procedure;
+program testsintatico;
 var sTrin: integer;
 begin
-//
+ // comentário de linha
+ /*
+  comentário de bloco
+ */
 end.

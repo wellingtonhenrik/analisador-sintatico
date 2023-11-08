@@ -3,13 +3,11 @@
   o analisador léxico
   Erros léxicos propositais foram deixados para testar as validações
 */
-program test_procedure;
+program testprocedure;
+var num: integer;
+procedure imprimemensagem(segundoInt: integer);
 begin
-procedure imprime_mensagem(mensagem)
+end;
 begin
-  print(mensagem);
-end
-
-imprime_mensagem("Hello World!")
-
+print{num};
 end.

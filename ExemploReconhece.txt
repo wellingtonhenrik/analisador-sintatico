@@ -1,0 +1,10 @@
+program testando;
+const dez = 10; 
+const vinte = 20;
+var lsTexto : integer;
+procedure Teste(segundoInt: integer);
+begin
+end;
+begin
+end
+.

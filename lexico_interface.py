@@ -43,7 +43,7 @@ rotulo_caminho.grid(row=0, column=0, padx=10, pady=5, sticky="w")
 
 entrada_caminho = tk.Entry(frame, width=40)
 entrada_caminho.grid(row=0, column=1, padx=10, pady=5)
-entrada_caminho.insert(0, "./arquivo2.txt")
+entrada_caminho.insert(0, "./ExemploReconhece.txt")
 
 botao_selecionar = tk.Button(frame, text="Selecionar Arquivo", command=abrir_arquivo)
 botao_selecionar.grid(row=0, column=2, padx=10, pady=5)

@@ -1,5 +1,6 @@
 import numpy as np
 from lexico_utils import *
+from parsing import TabParsing
 
 def le_arquivo(caminho):
     # Lê o arquivo e garante que será fechado automaticamente
@@ -98,15 +99,8 @@ def processar_arquivo(arquivo):
                 lexema = linha[i]
             elif linha[i] != ' ' or lexema.startswith("'"):
                 lexema = lexema + linha[i]
-            else:
-                if lexema.strip() != '':
-                    # Identificador
-                    validar_identificador(linha_numero, lexema)
-                    token = lexemas_array.index('ident') + 1
-                    adicionar_token_e_lexema(tokens, lexemas, token, lexema, linha_numero, linha_atual)
-                    lexema = ''
 
-            if lexema in lexemas_filtrados:
+            if (lexema in lexemas_filtrados):
                 # Verifica se o próximo caractere forma um operador composto. Casos do tipo <> :=
                 if i + 1 < len(linha) and lexema + linha[i + 1] in lexemas_filtrados: 
                     lexema += linha[i + 1]
@@ -152,11 +146,6 @@ def processar_arquivo(arquivo):
                     validar_literal(linha_numero, lexema)
                     token = lexemas_array.index('literal') + 1
                 else:
-                    # if lexema:
-                    #     token = lexemas_array.index('ident') + 1
-                    #     adicionar_token_e_lexema(tokens, lexemas, token, lexema, linha_numero, linha_atual)
-                    #     lexema = ''
-                    # else:
                     token = ''
 
                 if token != '':
@@ -170,6 +159,8 @@ def processar_arquivo(arquivo):
 
     #exibir_tokens_e_lexemas(tokens, lexemas, linha_atual) # Apenas para entendimento, não é necessário para o funcionamento
     tokens = np.array(tokens)
+    #tokenchumbado = [8,16,31,21,16,26,12,31,21,16,26,12,31,2,16,33,14,31,9,16,39,16,33,14,38,31,22,10,40,13,41,31,18,31,22,18,35] # Para testar com tokens especificos
+    analise_sintatica(tokens)
     return tokens
 
 def adicionar_token_e_lexema(tokens, lexemas, token, lexema, linha, linha_atual):
@@ -181,3 +172,82 @@ def exibir_tokens_e_lexemas(tokens, lexemas, linha_atual):
     for token, lexema, linha in zip(tokens, lexemas, linha_atual):
         print(f'Token: {token} - Lexema: {lexema} - Linha: {linha}')
     print(tokens) # [array de tokens] Apenas para entendimento, não é necessário para o funcionamento
+
+def analise_sintatica(tokens):
+    print(tokens)
+
+    erro = False
+    erroMsg = ''
+
+    # Inicializar a Matriz de Parsing com zeros.
+    tabParsing = TabParsing()
+    tabParsing.inicializarTab()
+    tabParsing.inicializarProdu()
+
+    # Tabela de parsing populada
+    tabelaParsing = tabParsing.tabParsing
+
+    # Tabela de produções populada
+    producoes = tabParsing.producoes
+
+    pilha = [43] #$ topo da pilha - gramatica
+
+    pilha = np.hstack([producoes[1][:], pilha])
+    pilha = pilha[pilha != 0]
+
+    print(pilha)
+
+    X = pilha[0]
+    a = tokens[0]
+
+    while X != 43: #enquanto pilha nao estiver vazia
+        print("X: "+ str(X))
+        print("a: " + str(a))
+        print(pilha)
+        if X == 44: #se o topo da pilha for vazio
+            pilha = np.delete(pilha,[0])
+            X = pilha[0]
+        else:
+            if X <= 44: #topo da pilha é um terminal
+                if X == a: #deu match
+                    pilha = np.delete(pilha,[0])
+                    tokens = np.delete(tokens,[0])
+                    X = pilha[0]
+                    if tokens.size != 0:
+                        a = tokens[0]
+                else:
+                    erro = True
+                    erroMsg = 'Error, mismatch'
+                    break
+            else:
+                if int(tabelaParsing[X][a]) != 0: # se existe uma producao
+                    print('producao: '+str(tabelaParsing[X][a]))    
+                    pilha = np.delete(pilha,[0])
+                    pilha = np.hstack([producoes[int(tabelaParsing[X][a])][:], pilha]) #empilha as producoes correspondentes
+                    pilha = pilha[pilha != 0]  
+                    X = pilha[0]
+                else:
+                    erro = True
+                    erroMsg = 'Error, no production'
+                    break
+                # topo = np.hstack([producoes[int(tabelaParsing[X][a])][:], pilha]) #empilha as producoes correspondentes
+                # if topo[0] == 44: # se topo vazio X recebe o novo topo da pilha
+                #     X = topo[0] #
+                # else:
+                #     if topo[0] != 44: # se topo nao vazio atualiza a pilha
+                #         pilha = np.delete(pilha,[0])
+                #         pilha = np.hstack([producoes[int(tabelaParsing[X][a])][:], pilha])
+                #         pilha = pilha[pilha != 0]
+                #         X = pilha[0]
+                #     else:
+                #         print('Error')
+                #         break
+
+    if erro:
+        print(erroMsg)
+    else:
+        print('Pilha: ')                
+        print(pilha)
+        print('Entrada: ')
+        print(tokens)
+        print('Sentença reconhecida com sucesso')

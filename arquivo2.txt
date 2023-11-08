@@ -4,18 +4,14 @@
   Erros léxicos propositais foram deixados para testar as validações
 */
 program teste;
+var texto: string;
+num: integer;
+procedure soma(num: integer, outro: integer);
 begin
-  texto: string;
-  te$to := 'Hello World';
-  print(texto);
-
-  // Exemplo de while
-  while(true) do begin
-    print("testando");
-  end;
-
-  //Exemplo de for
-  for i := 0 to 10 do begin
-    print(i);
-  end; 
+print{num};
+print{outro};
+end;
+begin
+  //texto := 'Hello World';
+  print{texto}; 
 end.
