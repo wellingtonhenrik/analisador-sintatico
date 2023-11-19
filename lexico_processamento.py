@@ -230,18 +230,6 @@ def analise_sintatica(tokens):
                     erro = True
                     erroMsg = 'Error, no production'
                     break
-                # topo = np.hstack([producoes[int(tabelaParsing[X][a])][:], pilha]) #empilha as producoes correspondentes
-                # if topo[0] == 44: # se topo vazio X recebe o novo topo da pilha
-                #     X = topo[0] #
-                # else:
-                #     if topo[0] != 44: # se topo nao vazio atualiza a pilha
-                #         pilha = np.delete(pilha,[0])
-                #         pilha = np.hstack([producoes[int(tabelaParsing[X][a])][:], pilha])
-                #         pilha = pilha[pilha != 0]
-                #         X = pilha[0]
-                #     else:
-                #         print('Error')
-                #         break
 
     if erro:
         print(erroMsg)

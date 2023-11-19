@@ -1,11 +1,12 @@
-import numpy as np
 from parsing import TabParsing
+import numpy as np
 
-# Tokens virão do analisador léxico
-tokens = [8, 16, 31, 2, 16, 33, 14, 31, 22, 18, 35]
+tokens = '' # Entrada
 
-print(tokens) 
-tokens = np.array(tokens)
+print(tokens)
+
+erro = False
+erroMsg = ''
 
 # Inicializar a Matriz de Parsing com zeros.
 tabParsing = TabParsing()
@@ -29,8 +30,8 @@ X = pilha[0]
 a = tokens[0]
 
 while X != 43: #enquanto pilha nao estiver vazia
-    print(X)
-    print(a)
+    print("X: "+ str(X))
+    print("a: " + str(a))
     print(pilha)
     if X == 44: #se o topo da pilha for vazio
         pilha = np.delete(pilha,[0])
@@ -44,24 +45,26 @@ while X != 43: #enquanto pilha nao estiver vazia
                 if tokens.size != 0:
                     a = tokens[0]
             else:
-                print('Error')
+                erro = True
+                erroMsg = 'Error, mismatch'
                 break
         else:
-            topo = np.hstack([producoes[int(tabelaParsing[X][a])][:], pilha]) #empilha as producoes correspondentes
-            if topo[0] == 44: # se topo vazio X recebe o novo topo da pilha
-                X = topo[0] #
+            if int(tabelaParsing[X][a]) != 0: # se existe uma producao
+                print('producao: '+str(tabelaParsing[X][a]))    
+                pilha = np.delete(pilha,[0])
+                pilha = np.hstack([producoes[int(tabelaParsing[X][a])][:], pilha]) #empilha as producoes correspondentes
+                pilha = pilha[pilha != 0]  
+                X = pilha[0]
             else:
-                if topo[0] != 44: # se topo nao vazio atualiza a pilha
-                    pilha = np.delete(pilha,[0])
-                    pilha = np.hstack([producoes[int(tabelaParsing[X][a])][:], pilha])
-                    pilha = pilha[pilha != 0]
-                    X = pilha[0]
-                else:
-                    print('Error')
-                    break
-print('Pilha: ')                
-print(pilha)
-print('Entrada: ')
-print(tokens)
-print('Sentença reconhecida com sucesso')
-        
+                erro = True
+                erroMsg = 'Error, no production'
+                break
+
+if erro:
+    print(erroMsg)
+else:
+    print('Pilha: ')                
+    print(pilha)
+    print('Entrada: ')
+    print(tokens)
+    print('Sentença reconhecida com sucesso')

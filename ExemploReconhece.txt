@@ -1,10 +1,12 @@
-program testando;
+program progdois;
 const dez = 10; 
 const vinte = 20;
 var lsTexto : integer;
-procedure Teste(segundoInt: integer);
+ldNum: real;
+procedure proctesteum(segundoInt: integer);
 begin
 end;
 begin
+ print{'testando'};
 end
 .

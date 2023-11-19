@@ -4,10 +4,10 @@
   Erros léxicos propositais foram deixados para testar as validações
 */
 program testprocedure;
-var num: integer;
+var num:integer;
 procedure imprimemensagem(segundoInt: integer);
 begin
 end;
 begin
-print{num};
-end.
+
+end

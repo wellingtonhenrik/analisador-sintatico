@@ -1,0 +1,17 @@
+program ProgExemplo;
+
+var valor:string;
+
+procedure maiorque(valorA,ValorB:integer);
+    begin
+	if (valorA >= valorB) then begin
+	    print{"A maior ou igual que B"};
+	end
+	else begin
+	    print{"B maior ou igual que A"};
+	end;
+
+    end;
+begin
+    maiorque(9,8);
+end.
