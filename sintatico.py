@@ -1,17 +1,54 @@
 from parsing import TabParsing
 import numpy as np
 
+def verificar_regras_semanticas(tokens, tokens_lexemas, lexemas):
+    # Verificação de regras semânticas
+
+    # Uma const nunca pode ser alterada
+    if 'const' in tokens_lexemas.values():
+        for i in range(len(tokens) - 1):
+            if tokens[i] == 'const' and tokens[i + 1] == ':=':
+                print("Erro semântico: Tentativa de modificar uma constante.")
+                return False
+
+    # String não pode ser utilizada em operações matemáticas
+    if 'string' in tokens_lexemas.values():
+        for i in range(len(lexemas) - 1):
+            if lexemas[i] == 'string' and tokens[i + 1] in {'+', '-', '*', '/'}:
+                print("Erro semântico: Uso de string em operação matemática não é permitido.")
+                return False
+
+    # Variável criada dentro da função não pode ser utilizada fora dela
+    variaveis_funcao = set()
+    for i in range(len(lexemas) - 1):
+        if lexemas[i] == 'var':
+            variaveis_funcao.add(lexemas[i + 1])
+
+        if lexemas[i] == 'end':
+            variaveis_funcao.clear()
+
+        # Adapte a verificação para verificar se a variável está sendo utilizada fora da função aqui...
+
+    # Função só poderá receber seu tipo
+    # Implemente aqui a verificação dos parâmetros e do escopo da função...
+
+    return True
+
 tokens = '' # Entrada
+tokens_lexemas = {}  # Mapeamento de tokens para seus lexemas
+lexemas = []  # Lista de lexemas
 
 print(tokens)
 
 erro = False
 erroMsg = ''
 
-# Inicializar a Matriz de Parsing com zeros.
-tabParsing = TabParsing()
-tabParsing.inicializarTab()
-tabParsing.inicializarProdu()
+if verificar_regras_semanticas(tokens, tokens_lexemas, lexemas):
+    
+    # Inicializar a Matriz de Parsing com zeros.
+    tabParsing = TabParsing()
+    tabParsing.inicializarTab()
+    tabParsing.inicializarProdu()
 
 # Tabela de parsing populada
 tabelaParsing = tabParsing.tabParsing
@@ -60,11 +97,14 @@ while X != 43: #enquanto pilha nao estiver vazia
                 erroMsg = 'Error, no production'
                 break
 
-if erro:
-    print(erroMsg)
+    if erro:
+         print(erroMsg)
+    else:
+         print('Pilha: ')                
+         print(pilha)
+         print('Entrada: ')
+         print(tokens)
+         print('Sentença reconhecida com sucesso')
+
 else:
-    print('Pilha: ')                
-    print(pilha)
-    print('Entrada: ')
-    print(tokens)
-    print('Sentença reconhecida com sucesso')
+    print("Falha na verificação das regras semânticas.")
