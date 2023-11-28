@@ -7,6 +7,7 @@ def le_arquivo(caminho):
     with open(caminho, "r") as arquivo:
         return processar_arquivo(arquivo)
 
+
 def processar_arquivo(arquivo):
 
     # Dicionário para armazenar os tokens e lexemas
