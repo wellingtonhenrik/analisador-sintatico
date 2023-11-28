@@ -7,7 +7,9 @@ def le_arquivo(caminho):
     with open(caminho, "r") as arquivo:
         return processar_arquivo(arquivo)
 
+
 def processar_arquivo(arquivo):
+
     # Dicionário para armazenar os tokens e lexemas
     tokens_lexemas = {
         1: "while",
@@ -53,6 +55,67 @@ def processar_arquivo(arquivo):
         41: "}",
         42: "-"
     }
+     # Variáveis para rastrear o escopo das variáveis
+    variaveis_funcao = set()
+    funcoes_tipos = {}
+
+    def verificar_regras_semanticas(tokens):
+        
+        # Uma const nunca pode ser alterada
+        if 'const' in tokens_lexemas.values():
+            for i in range(len(tokens) - 1):
+                if tokens[i] == 'const' and tokens[i + 1] == ':=':
+                    print("Erro semântico: Tentativa de modificar uma constante.")
+                    return False
+     
+        # String não pode ser utilizada em operações matemáticas
+        if 'string' in tokens_lexemas.values():
+            for i in range(len(lexemas) - 1):
+                if lexemas[i] == 'string' and tokens[i + 1] in {'+', '-', '*', '/'}:
+                    print("Erro semântico: Uso de string em operação matemática não é permitido.")
+                    return False
+     
+        # Variável criada dentro da função não pode ser utilizada fora dela
+        for i in range(len(lexemas) - 1):
+            if lexemas[i] == 'var':
+                variaveis_funcao.add(lexemas[i + 1])  
+
+            if lexemas[i] == 'end':
+                variaveis_funcao.clear() 
+
+            if lexemas[i] == 'procedure':
+                funcao = lexemas[i + 1]
+                tipo_argumentos = []
+
+                j = i + 3 
+                while lexemas[j] != 'begin':
+                    tipo_argumentos.append(lexemas[j])
+                    j += 2
+
+                funcoes_tipos[funcao] = tipo_argumentos  
+
+            if lexemas[i] == 'ident' and lexemas[i - 1] == '(':
+                funcao_chamada = lexemas[i]
+                argumentos_chamada = []
+                j = i + 1
+
+                while lexemas[j] != ')':
+                    argumentos_chamada.append(lexemas[j])
+                    j += 2
+
+                if funcao_chamada in funcoes_tipos:
+                    tipos_esperados = funcoes_tipos[funcao_chamada]
+                    if len(argumentos_chamada) != len(tipos_esperados):
+                        print(f"Erro semântico: Número incorreto de argumentos para a função '{funcao_chamada}'.")
+                        return False
+
+                    for idx, arg in enumerate(argumentos_chamada):
+                        if arg != tipos_esperados[idx]:
+                            print(f"Erro semântico: Tipo incorreto para o argumento {idx + 1} da função '{funcao_chamada}'. Esperado: {tipos_esperados[idx]}, Recebido: {arg}.")
+                            return False
+                        
+        return True
+
 
     valores_a_excluir = {"nreal", "nint", "literal", "ident", "vstring"}
 
@@ -159,9 +222,14 @@ def processar_arquivo(arquivo):
 
     #exibir_tokens_e_lexemas(tokens, lexemas, linha_atual) # Apenas para entendimento, não é necessário para o funcionamento
     tokens = np.array(tokens)
-    #tokenchumbado = [8,16,31,21,16,26,12,31,21,16,26,12,31,2,16,33,14,31,9,16,39,16,33,14,38,31,22,10,40,13,41,31,18,31,22,18,35] # Para testar com tokens especificos
-    analise_sintatica(tokens)
+    
+    if verificar_regras_semanticas(lexemas):
+        #tokenchumbado = [8,16,31,21,16,26,12,31,21,16,26,12,31,2,16,33,14,31,9,16,39,16,33,14,38,31,22,10,40,13,41,31,18,31,22,18,35] # Para testar com tokens especificos
+        analise_sintatica(tokens)
+    else:
+        print("Falha na verificação das regras semânticas.")
     return tokens
+
 
 def adicionar_token_e_lexema(tokens, lexemas, token, lexema, linha, linha_atual):
     tokens.append(token)
@@ -239,3 +307,5 @@ def analise_sintatica(tokens):
         print('Entrada: ')
         print(tokens)
         print('Sentença reconhecida com sucesso')
+
+        
