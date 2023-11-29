@@ -8,6 +8,8 @@ print(tokens)
 erro = False
 erroMsg = ''
 
+# if verificar_regras_semanticas(tokens, tokens_lexemas, lexemas):
+    
 # Inicializar a Matriz de Parsing com zeros.
 tabParsing = TabParsing()
 tabParsing.inicializarTab()
@@ -60,11 +62,14 @@ while X != 43: #enquanto pilha nao estiver vazia
                 erroMsg = 'Error, no production'
                 break
 
-if erro:
-    print(erroMsg)
+    if erro:
+         print(erroMsg)
+    else:
+         print('Pilha: ')                
+         print(pilha)
+         print('Entrada: ')
+         print(tokens)
+         print('Sentença reconhecida com sucesso')
+
 else:
-    print('Pilha: ')                
-    print(pilha)
-    print('Entrada: ')
-    print(tokens)
-    print('Sentença reconhecida com sucesso')
+    print("Falha na verificação das regras semânticas.")
