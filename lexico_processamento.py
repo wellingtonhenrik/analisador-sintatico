@@ -1,6 +1,7 @@
 import numpy as np
 from lexico_utils import *
 from parsing import TabParsing
+from semantico import AnaliseSemantica
 
 def le_arquivo(caminho):
     # Lê o arquivo e garante que será fechado automaticamente
@@ -252,6 +253,9 @@ def analise_sintatica(tokens):
     tabParsing.inicializarTab()
     tabParsing.inicializarProdu()
 
+    # Inicializar a Tabela de Simbolos
+    analise_semantica = AnaliseSemantica()
+
     # Tabela de parsing populada
     tabelaParsing = tabParsing.tabParsing
 
@@ -278,6 +282,7 @@ def analise_sintatica(tokens):
         else:
             if X <= 44: #topo da pilha é um terminal
                 if X == a: #deu match
+                    # Colocar aqui as validações
                     pilha = np.delete(pilha,[0])
                     tokens = np.delete(tokens,[0])
                     X = pilha[0]
@@ -307,5 +312,3 @@ def analise_sintatica(tokens):
         print('Entrada: ')
         print(tokens)
         print('Sentença reconhecida com sucesso')
-
-        

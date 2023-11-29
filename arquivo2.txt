@@ -4,14 +4,7 @@
   Erros léxicos propositais foram deixados para testar as validações
 */
 program teste;
-var texto: string;
-num: integer;
-procedure soma(num: integer, outro: integer);
+var num: integer;
 begin
-print{num};
-print{outro};
-end;
-begin
-  //texto := 'Hello World';
-  print{texto}; 
+  //print{texto}; 
 end.
