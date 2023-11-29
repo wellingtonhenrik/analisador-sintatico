@@ -2,6 +2,43 @@ import numpy as np
 from lexico_utils import *
 from parsing import TabParsing
 
+tokens_lexemas = {}  # Mapeamento de tokens para seus lexemas
+lexemas = []  # Lista de lexemas
+
+def verificar_regras_semanticas(tokens, tokens_lexemas, lexemas):
+    # Verificação de regras semânticas
+
+    # Uma const nunca pode ser alterada
+    if 'const' in tokens_lexemas.values():
+        for i in range(len(tokens) - 1):
+            if tokens[i] == 'const' and tokens[i + 1] == ':=':
+                print("Erro semântico: Tentativa de modificar uma constante.")
+                return False
+
+    # String não pode ser utilizada em operações matemáticas
+    if 'string' in tokens_lexemas.values():
+        for i in range(len(lexemas) - 1):
+            if lexemas[i] == 'string' and tokens[i + 1] in {'+', '-', '*', '/'}:
+                print("Erro semântico: Uso de string em operação matemática não é permitido.")
+                return False
+
+    # Variável criada dentro da função não pode ser utilizada fora dela
+    variaveis_funcao = set()
+    for i in range(len(lexemas) - 1):
+        if lexemas[i] == 'var':
+            variaveis_funcao.add(lexemas[i + 1])
+
+        if lexemas[i] == 'end':
+            variaveis_funcao.clear()
+
+        # Adapte a verificação para verificar se a variável está sendo utilizada fora da função aqui...
+
+    # Função só poderá receber seu tipo
+    # Implemente aqui a verificação dos parâmetros e do escopo da função...
+
+    return True
+
+
 def le_arquivo(caminho):
     # Lê o arquivo e garante que será fechado automaticamente
     with open(caminho, "r") as arquivo:
@@ -178,6 +215,7 @@ def exibir_tokens_e_lexemas(tokens, lexemas, linha_atual):
     print(tokens) # [array de tokens] Apenas para entendimento, não é necessário para o funcionamento
 
 def analise_sintatica(tokens):
+    
     print(tokens)
 
     erro = False
@@ -198,6 +236,8 @@ def analise_sintatica(tokens):
 
     pilha = np.hstack([producoes[1][:], pilha])
     pilha = pilha[pilha != 0]
+
+    # verificar_regras_semanticas(tokens, tokens_lexemas, lexemas)
 
     print(pilha)
 
